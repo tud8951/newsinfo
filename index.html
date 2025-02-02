@@ -69,8 +69,8 @@
         let level = 1;
         let lives = 3;
 
-        // 全局变量存储鼠标位置
-        let mouseX = paddleX + paddleWidth / 2;  // 初始鼠标位置在挡板中心
+        // 全局变量存储触摸位置
+        let touchX = paddleX + paddleWidth / 2;  // 初始触摸位置在挡板中心
 
         // 创建砖块
         function createBricks() {
@@ -97,8 +97,8 @@
         }
 
         function update() {
-            // 使用全局变量存储的鼠标位置
-            paddleX = mouseX - paddleWidth / 2;
+            // 使用全局变量存储的触摸位置
+            paddleX = touchX - paddleWidth / 2;
 
             // 确保挡板不超出屏幕边界
             if (paddleX < 0) {
@@ -224,9 +224,31 @@
             };
         }
 
+        function getTouchPos(canvas, event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: event.touches[0].clientX - rect.left,
+                y: event.touches[0].clientY - rect.top
+            };
+        }
+
         canvas.addEventListener('mousemove', function(event) {
             const mouse = getMousePos(canvas, event);
-            mouseX = mouse.x;  // 更新全局变量存储的鼠标位置
+            touchX = mouse.x;  // 更新全局变量存储的触摸位置
+        });
+
+        canvas.addEventListener('touchstart', function(event) {
+            const touch = getTouchPos(canvas, event);
+            touchX = touch.x;  // 更新全局变量存储的触摸位置
+        });
+
+        canvas.addEventListener('touchmove', function(event) {
+            const touch = getTouchPos(canvas, event);
+            touchX = touch.x;  // 更新全局变量存储的触摸位置
+        });
+
+        canvas.addEventListener('touchend', function(event) {
+            // 不需要特别处理 touchend 事件
         });
 
         gameLoop();
